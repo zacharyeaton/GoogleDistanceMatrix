@@ -1,0 +1,74 @@
+﻿@model GoogleDistanceMatrix.Models.LocationModel
+
+<div class="jumbotron">
+    <h1>Google Distance Matrix API</h1>
+    <p class="lead">This website gives the ability to choose two locations points, and calculate the distance and duration between the points.</p>
+    
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h2>Start searching</h2>
+        <p>Step 1: Select your two locations.</p>
+        <p>Step 2: Select your mode of transport.</p>
+        <p>Step 3: Press go </p>
+    </div>
+</div>
+<div class="row">
+    @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+    {
+        @Html.ValidationSummary(true, "Error, Google Maps didnt like something, please try again with different locations")
+
+      
+        <div class="form-group">
+            @Html.LabelFor(m => m.Origin, new { @class = "col-md-1 control-label" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(m => m.Origin, new { @class = "form-control" })
+            </div>
+        </div>
+     
+        <div class="form-group">
+            @Html.LabelFor(m => m.Destination, new { @class = "col-md-1 control-label" })
+            <div class="col-md-2">
+                @Html.TextBoxFor(m => m.Destination, new { @class = "form-control" })
+            </div>
+        </div>
+        
+        <div class="form-group">
+            @Html.LabelFor(m => m.Mode, new { @class = "col-md-1 control-label" })
+            <div class="col-md-2">
+                @Html.DropDownListFor(m => m.Mode, Model.Modes, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                <input type="submit" class="btn btn-default" value="Go" />
+            </div>
+        </div>               
+    }
+</div>
+  
+@if (IsPost && Model.Distance != null)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <h2>'@Model.Origin' to '@Model.Destination' with transport mode '@Model.Mode'</h2>
+            
+            <p>The distance is: @Model.Distance</p>
+            <p>The duration is: @Model.Duration</p>
+        </div>
+    </div>
+}
+@if(Model.History != null){
+    <div class="row">
+        <div class="col-md-12">
+            <h2>History</h2>           
+            @for (var i = 0; i < Model.History.Count; i++)
+            {
+                <p><a href="#">Search</a>: '@Model.History[i].Origin' to '@Model.History[i].Destination', using mode '@Model.History[i].Mode'</p>
+            }            
+        </div>
+    </div>
+}
+
+
+
